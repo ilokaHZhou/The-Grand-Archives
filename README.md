@@ -17,7 +17,7 @@ Issues：
 
 
 ## Maintainers  
-[@ilokaHZhou](https://github.com/ilokaHZhou).
+[@ilokaHZhou](https://github.com/ilokaHZhou) [momoyiyi777](https://github.com/momoyiyi777)
 
 
 ## License  
