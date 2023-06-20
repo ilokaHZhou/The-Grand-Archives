@@ -1,4 +1,4 @@
-# Blog
+# Harry's Tech Blog
 ## 简介
 直接用Github提供的 Issues + Projects 建立的技术博客，主要用来存储一些学习资料，技术心得，小贴士，各类教程和工具。
 
@@ -17,7 +17,7 @@ Issues：
 
 
 ## Maintainers  
-[@ilokaHZhou](https://github.com/ilokaHZhou)   [@momoyiyi777](https://github.com/momoyiyi777)
+[@ilokaHZhou](https://github.com/ilokaHZhou) 
 
 
 ## License  
