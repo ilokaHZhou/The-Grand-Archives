@@ -4,9 +4,10 @@
 
 Issues和Projects在最上方的Tabs那一排里。  
 
-Projects：  
+Code：  
 用于进行大方向上的知识分类，如开发工具，算法，数据库，分布式架构，网络开发，APP开发等。
 也可以添加一些包含内容较多的项目如AWS，Linux，Docker，MongoDB等。
+All codes will follow clean code rules
 
 Issues：  
 所有的博文记录在Issues里面，Issues里有不同的labels用于细分类别，如Python，Git， VScode等。
