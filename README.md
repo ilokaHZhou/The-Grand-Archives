@@ -9,13 +9,15 @@ Code:
 
 Currently I have some Angular projects and clean code examples, and in the future I will add other projects like Vue projects, python stuff etc.
 
+目前我会放一些Angular的项目和Clean Code相关的内容，后续可能会添加一些Vue和Python的项目。
 
 Issues：
 
-所有的博文记录在Issues里面，Issues里有不同的labels用于细分类别，如Python，Git， VScode等。
-每篇Issues写完后要选择对应的标签Lables和分类Projects。
+All the articles are stored in issues and I used different labels for filtering like Python, Git, VScode etc. Issues can be found in the tabs below the repo name.
 
-Issues can be found in the tabs below the repo name.
+
+所有的博文记录在Issues里面，Issues里有不同的labels用于细分类别，如Python，Git， VScode等。
+
 
 
 不定期更新~  
