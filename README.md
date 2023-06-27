@@ -1,17 +1,21 @@
 # Harry's Tech Blog
-## 简介
-直接用Github提供的 Issues + Projects 建立的技术博客，主要用来存储一些学习资料，技术心得，小贴士，各类教程和工具。
+## 简介 Introduction
 
-Issues和Projects在最上方的Tabs那一排里。  
+Hi! Welcome to my personal tech blog! This blog is contructed by using both Github's code part and issues part. In the code part, I will upload frontend and backend projects codes that I'm learning and in issues I will share some of my learning materials, thoughts, ideas, tutorials and tools.
 
-Code：  
-用于进行大方向上的知识分类，如开发工具，算法，数据库，分布式架构，网络开发，APP开发等。
-也可以添加一些包含内容较多的项目如AWS，Linux，Docker，MongoDB等。
-All codes will follow clean code rules
+Hi！欢迎来到我的技术博客！这是一个直接用Github提供的 Code + Issues 建立的技术博客，Code部分我会放一些学过或者正在学的一些前后端项目，Issues主要用来归档一些学习资料，技术心得，小贴士，各类教程和工具。
 
-Issues：  
+Code:
+
+Currently I have some Angular projects and clean code examples, and in the future I will add other projects like Vue projects, python stuff etc.
+
+
+Issues：
+
 所有的博文记录在Issues里面，Issues里有不同的labels用于细分类别，如Python，Git， VScode等。
 每篇Issues写完后要选择对应的标签Lables和分类Projects。
+
+Issues can be found in the tabs below the repo name.
 
 
 不定期更新~  
@@ -23,4 +27,4 @@ Issues：
 
 ## License  
 
-[MIT](LICENSE) © Richard Littauer
+[MIT](LICENSE) 
