@@ -328,11 +328,11 @@ destructuring syntax. This has a few advantages:
 如果需要很多参数，请您考虑使用对象。为了使函数的属性更清晰，可以使用[解构](https://basarat.gitbooks.io/typescript/docs/destructuring.html)，它有以下优点：
 
 1. 当有人查看函数签名时，会立即清楚使用了哪些属性。
-2. 可以用来
+2. 可以用来当作命名的参数
 3. 解构对传递给函数的参数对象做深拷贝，这可预防副作用。(注意：**不会克隆**从参数对象中解构的对象和数组)
 4. linters会对未使用的属性显示警告。
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 function createMenu(title, body, buttonText, cancellable) {
@@ -343,7 +343,7 @@ createMenu("Foo", "Bar", "Baz", true);
 
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function createMenu({ title, body, buttonText, cancellable }) {
