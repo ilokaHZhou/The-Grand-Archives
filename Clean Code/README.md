@@ -17,23 +17,23 @@
     - [Function names should say what they do 函数名应明确表明其功能](#function-names-should-say-what-they-do-函数名应明确表明其功能)
     - [Functions should only be one level of abstraction 函数应该只做一层抽象](#functions-should-only-be-one-level-of-abstraction-函数应该只做一层抽象)
     - [Remove duplicate code 移除重复的代码](#remove-duplicate-code-移除重复的代码)
-    - [Set default objects with Object.assign 采用默认参数精简代码](#set-default-objects-with-objectassign-采用默认参数精简代码)
-    - [Don't use flags as function parameters](#dont-use-flags-as-function-parameters)
-    - [Avoid Side Effects (part 1)](#avoid-side-effects-part-1)
+    - [Set default objects with Object.assign 使用 Object.assign 设置默认对象](#set-default-objects-with-objectassign-使用-objectassign-设置默认对象)
+    - [Don't use flags as function parameters 不要使用标记(Flag)作为函数参数](#dont-use-flags-as-function-parameters-不要使用标记flag作为函数参数)
+    - [Avoid Side Effects (part 1) 避免副作用](#avoid-side-effects-part-1-避免副作用)
     - [Avoid Side Effects (part 2)](#avoid-side-effects-part-2)
-    - [Don't write to global functions](#dont-write-to-global-functions)
-    - [Favor functional programming over imperative programming](#favor-functional-programming-over-imperative-programming)
-    - [Encapsulate conditionals](#encapsulate-conditionals)
-    - [Avoid negative conditionals](#avoid-negative-conditionals)
-    - [Avoid conditionals](#avoid-conditionals)
-    - [Avoid type-checking (part 1)](#avoid-type-checking-part-1)
-    - [Avoid type-checking (part 2)](#avoid-type-checking-part-2)
-    - [Don't over-optimize](#dont-over-optimize)
-    - [Remove dead code](#remove-dead-code)
-  - [**Objects and Data Structures**](#objects-and-data-structures)
-    - [Use getters and setters](#use-getters-and-setters)
-    - [Make objects have private members](#make-objects-have-private-members)
-  - [**Classes**](#classes)
+    - [Don't write to global functions 不要写全局函数](#dont-write-to-global-functions-不要写全局函数)
+    - [Favor functional programming over imperative programming 采用函数式编程而不是命令式编程](#favor-functional-programming-over-imperative-programming-采用函数式编程而不是命令式编程)
+    - [Encapsulate conditionals 封装判断条件](#encapsulate-conditionals-封装判断条件)
+    - [Avoid negative conditionals 避免“否定情况”的判断](#avoid-negative-conditionals-避免否定情况的判断)
+    - [Avoid conditionals 避免条件判断](#avoid-conditionals-避免条件判断)
+    - [Avoid type-checking (part 1) 避免类型判断(part 1)](#avoid-type-checking-part-1-避免类型判断part-1)
+    - [Avoid type-checking (part 2) 避免类型判断(part 2)](#avoid-type-checking-part-2-避免类型判断part-2)
+    - [Don't over-optimize 避免过度优化](#dont-over-optimize-避免过度优化)
+    - [Remove dead code 删除无效的代码](#remove-dead-code-删除无效的代码)
+  - [**Objects and Data Structures 对象和数据结构**](#objects-and-data-structures-对象和数据结构)
+    - [Use getters and setters 使用 getters 和 setters](#use-getters-and-setters-使用-getters-和-setters)
+    - [Make objects have private members 让对象拥有私有成员](#make-objects-have-private-members-让对象拥有私有成员)
+  - [**Classes 类**](#classes-类)
     - [Prefer ES2015/ES6 classes over ES5 plain functions](#prefer-es2015es6-classes-over-es5-plain-functions)
     - [Use method chaining](#use-method-chaining)
     - [Prefer composition over inheritance](#prefer-composition-over-inheritance)
@@ -591,32 +591,66 @@ function showEmployeeList(employees) {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Set default objects with Object.assign 采用默认参数精简代码
+### Set default objects with Object.assign 使用 Object.assign 设置默认对象
 
 **:-1: Bad:**
 
 ```javascript
-function writeForumComment(subject, body) {
-  subject = subject || 'No Subject';
-  body = body || 'No text';
+const menuConfig = {
+  title: null,
+  body: "Bar",
+  buttonText: null,
+  cancellable: true
+};
+
+function createMenu(config) {
+  config.title = config.title || "Foo";
+  config.body = config.body || "Bar";
+  config.buttonText = config.buttonText || "Baz";
+  config.cancellable =
+    config.cancellable !== undefined ? config.cancellable : true;
 }
+
+createMenu(menuConfig);
 ```
 
 **:+1: Good:**
 
 ```javascript
-function writeForumComment(subject = 'No subject', body = 'No text') {
+const menuConfig = {
+  title: "Order",
+  // User did not include 'body' key
+  buttonText: "Send",
+  cancellable: true
+};
+
+function createMenu(config) {
+  let finalConfig = Object.assign(
+    {
+      title: "Foo",
+      body: "Bar",
+      buttonText: "Baz",
+      cancellable: true
+    },
+    config
+  );
+  return finalConfig
+  // config now equals: {title: "Order", body: "Bar", buttonText: "Send", cancellable: true}
   // ...
 }
+
+createMenu(menuConfig);
 ```
 
 **[⬆ back to top](#table-of-contents)**
 
-### Don't use flags as function parameters
+### Don't use flags as function parameters 不要使用标记(Flag)作为函数参数
 
 Flags tell your user that this function does more than one thing. Functions should do one thing. Split out your functions if they are following different code paths based on a boolean.
 
-**Bad:**
+这通常意味着函数的功能的单一性已经被破坏。此时应考虑对函数进行再次划分。
+
+**:-1: Bad:**
 
 ```javascript
 function createFile(name, temp) {
@@ -628,7 +662,7 @@ function createFile(name, temp) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function createFile(name) {
@@ -642,7 +676,7 @@ function createTempFile(name) {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Avoid Side Effects (part 1)
+### Avoid Side Effects (part 1) 避免副作用
 
 A function produces a side effect if it does anything other than take a value in
 and return another value or values. A side effect could be writing to a file,
@@ -659,7 +693,11 @@ without any structure, using mutable data types that can be written to by anythi
 and not centralizing where your side effects occur. If you can do this, you will
 be happier than the vast majority of other programmers.
 
-**Bad:**
+当函数产生了除了“接受一个值并返回一个结果”之外的行为时，称该函数产生了副作用。比如写文件、修改全局变量或将你的钱全转给了一个陌生人等。
+
+程序在某些情况下确实需要副作用这一行为，如先前例子中的写文件。这时应该将这些功能集中在一起，不要用多个函数/类修改某个文件。用且只用一个 service 完成这一需求。
+
+**:-1: Bad:**
 
 ```javascript
 // Global variable referenced by following function.
@@ -675,7 +713,7 @@ splitIntoFirstAndLastName();
 console.log(name); // ['Ryan', 'McDermott'];
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function splitIntoFirstAndLastName(name) {
@@ -729,7 +767,24 @@ Two caveats to mention to this approach:
    this kind of programming approach to be fast and not as memory intensive as
    it would be for you to manually clone objects and arrays.
 
-**Bad:**
+
+
+在 JavaScript 中，原类型是值传递，对象、数组是引用传递。
+
+有这样一种情况，如果您的函数修改了购物车数组，用来添加购买的商品，那么其他使用该`cart`数组的函数都将受此添加操作的影响。想象一个糟糕的情况:
+
+用户点击“购买”按钮，该按钮调用`purchase`函数，函数请求网络并将`cart`数组发送到服务器。由于网络连接不好，购买功能必须不断重试请求。恰巧在网络请求开始前，用户不小心点击了某个不想要的项目上的“Add to Cart”按钮，该怎么办？而此时网络请求开始，那么`purchase`函数将发送意外添加的项，因为它引用了一个购物车数组，`addItemToCart`函数修改了该数组，添加了不需要的项。
+
+一个很好的解决方案是`addItemToCart`总是克隆`cart`，编辑它，并返回克隆。这确保引用购物车的其他函数不会受到任何更改的影响。
+
+注意两点:
+
+1. 在某些情况下，可能确实想要修改输入对象，这种情况非常少见。且大多数可以重构，确保没副作用！(见[纯函数](https://en.wikipedia.org/wiki/Pure_function))
+
+2. 性能方面，克隆大对象代价确实比较大。还好有一些很好的库，它提供了一些高效快速的方法，且不像手动克隆对象和数组那样占用大量内存。
+
+
+**:-1: Bad:**
 
 ```javascript
 const addItemToCart = (cart, item) => {
@@ -737,7 +792,7 @@ const addItemToCart = (cart, item) => {
 };
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 const addItemToCart = (cart, item) => {
@@ -747,7 +802,7 @@ const addItemToCart = (cart, item) => {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Don't write to global functions
+### Don't write to global functions 不要写全局函数
 
 Polluting globals is a bad practice in JavaScript because you could clash with another
 library and the user of your API would be none-the-wiser until they get an
@@ -759,7 +814,13 @@ to do the same thing. What if that other library was just using `diff` to find
 the difference between the first and last elements of an array? This is why it
 would be much better to just use ES2015/ES6 classes and simply extend the `Array` global.
 
-**Bad:**
+在 JS 中污染全局是一个非常不好的实践，这么做可能和其他库起冲突，且调用你的 API 的用户在实际环境中得到一个 exception 前对这一情况是一无所知的。
+
+想象以下例子：如果你想扩展 JS 中的 Array，为其添加一个 `diff` 函数显示两个数组间的差异，此时应如何去做？你可以将 diff 写入 `Array.prototype`，但这么做会和其他有类似需求的库造成冲突。如果另一个库对 diff 的需求为比较一个数组中首尾元素间的差异呢？
+
+使用 ES6 中的 class 对全局的 Array 做简单的扩展显然是一个更棒的选择。
+
+**:-1: Bad:**
 
 ```javascript
 Array.prototype.diff = function diff(comparisonArray) {
@@ -768,7 +829,7 @@ Array.prototype.diff = function diff(comparisonArray) {
 };
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 class SuperArray extends Array {
@@ -781,13 +842,15 @@ class SuperArray extends Array {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Favor functional programming over imperative programming
+### Favor functional programming over imperative programming 采用函数式编程而不是命令式编程
 
 JavaScript isn't a functional language in the way that Haskell is, but it has
 a functional flavor to it. Functional languages can be cleaner and easier to test.
 Favor this style of programming when you can.
 
-**Bad:**
+函数式的编程具有更干净且便于测试的特点。尽可能的使用这种风格吧。
+
+**:-1: Bad:**
 
 ```javascript
 const programmerOutput = [
@@ -816,7 +879,7 @@ for (let i = 0; i < programmerOutput.length; i++) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 const programmerOutput = [
@@ -846,9 +909,9 @@ const totalOutput = programmerOutput.reduce(
 
 **[⬆ back to top](#table-of-contents)**
 
-### Encapsulate conditionals
+### Encapsulate conditionals 封装判断条件
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 if (fsm.state === "fetching" && isEmpty(listNode)) {
@@ -856,7 +919,7 @@ if (fsm.state === "fetching" && isEmpty(listNode)) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function shouldShowSpinner(fsm, listNode) {
@@ -870,9 +933,9 @@ if (shouldShowSpinner(fsmInstance, listNodeInstance)) {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Avoid negative conditionals
+### Avoid negative conditionals 避免“否定情况”的判断
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 function isDOMNodeNotPresent(node) {
@@ -884,7 +947,7 @@ if (!isDOMNodeNotPresent(node)) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function isDOMNodePresent(node) {
@@ -898,7 +961,7 @@ if (isDOMNodePresent(node)) {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Avoid conditionals
+### Avoid conditionals 避免条件判断
 
 This seems like an impossible task. Upon first hearing this, most people say,
 "how am I supposed to do anything without an `if` statement?" The answer is that
@@ -909,7 +972,13 @@ one thing. When you have classes and functions that have `if` statements, you
 are telling your user that your function does more than one thing. Remember,
 just do one thing.
 
-**Bad:**
+这看起来似乎不太可能。
+
+大多人听到这的第一反应是：“怎么可能不用 if 完成其他功能呢？”许多情况下通过使用多态(polymorphism)可以达到同样的目的。
+
+第二个问题在于采用这种方式的原因是什么。答案是我们之前提到过的：保持函数功能的单一性。
+
+**:-1: Bad:**
 
 ```javascript
 class Airplane {
@@ -927,7 +996,7 @@ class Airplane {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 class Airplane {
@@ -958,14 +1027,18 @@ class Cessna extends Airplane {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Avoid type-checking (part 1)
+### Avoid type-checking (part 1) 避免类型判断(part 1)
 
 JavaScript is untyped, which means your functions can take any type of argument.
 Sometimes you are bitten by this freedom and it becomes tempting to do
 type-checking in your functions. There are many ways to avoid having to do this.
 The first thing to consider is consistent APIs.
 
-**Bad:**
+JS 是弱类型语言，这意味着函数可接受任意类型的参数。
+
+有时这会对你带来麻烦，你会对参数做一些类型判断。有许多方法可以避免这些情况。
+
+**:-1: Bad:**
 
 ```javascript
 function travelToTexas(vehicle) {
@@ -977,7 +1050,7 @@ function travelToTexas(vehicle) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function travelToTexas(vehicle) {
@@ -987,7 +1060,7 @@ function travelToTexas(vehicle) {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Avoid type-checking (part 2)
+### Avoid type-checking (part 2) 避免类型判断(part 2)
 
 If you are working with basic primitive values like strings and integers,
 and you can't use polymorphism but you still feel the need to type-check,
@@ -999,7 +1072,9 @@ doesn't make up for the lost readability. Keep your JavaScript clean, write
 good tests, and have good code reviews. Otherwise, do all of that but with
 TypeScript (which, like I said, is a great alternative!).
 
-**Bad:**
+如果需处理的数据为字符串，整型，数组等类型，无法使用多态并仍有必要对其进行类型检测时，可以考虑使用 TypeScript。
+
+**:-1: Bad:**
 
 ```javascript
 function combine(val1, val2) {
@@ -1014,7 +1089,7 @@ function combine(val1, val2) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function combine(val1, val2) {
@@ -1024,7 +1099,7 @@ function combine(val1, val2) {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Don't over-optimize
+### Don't over-optimize 避免过度优化
 
 Modern browsers do a lot of optimization under-the-hood at runtime. A lot of
 times, if you are optimizing then you are just wasting your time. [There are good
@@ -1032,7 +1107,11 @@ resources](https://github.com/petkaantonov/bluebird/wiki/Optimization-killers)
 for seeing where optimization is lacking. Target those in the meantime, until
 they are fixed if they can be.
 
-**Bad:**
+现代的浏览器在运行时会对代码自动进行优化。有时人为对代码进行优化可能是在浪费时间。
+
+[这里可以找到许多真正需要优化的地方](https://github.com/petkaantonov/bluebird/wiki/Optimization-killers)
+
+**:-1: Bad:**
 
 ```javascript
 // On old browsers, each iteration with uncached `list.length` would be costly
@@ -1042,7 +1121,7 @@ for (let i = 0, len = list.length; i < len; i++) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 for (let i = 0; i < list.length; i++) {
@@ -1052,13 +1131,15 @@ for (let i = 0; i < list.length; i++) {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Remove dead code
+### Remove dead code 删除无效的代码
 
 Dead code is just as bad as duplicate code. There's no reason to keep it in
 your codebase. If it's not being called, get rid of it! It will still be safe
 in your version history if you still need it.
 
-**Bad:**
+不再被调用的代码应及时删除。
+
+**:-1: Bad:**
 
 ```javascript
 function oldRequestModule(url) {
@@ -1073,7 +1154,7 @@ const req = newRequestModule;
 inventoryTracker("apples", req, "www.inventory-awesome.io");
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function newRequestModule(url) {
@@ -1086,9 +1167,9 @@ inventoryTracker("apples", req, "www.inventory-awesome.io");
 
 **[⬆ back to top](#table-of-contents)**
 
-## **Objects and Data Structures**
+## **Objects and Data Structures 对象和数据结构**
 
-### Use getters and setters
+### Use getters and setters 使用 getters 和 setters
 
 Using getters and setters to access data on objects could be better than simply
 looking for a property on an object. "Why?" you might ask. Well, here's an
@@ -1102,7 +1183,18 @@ unorganized list of reasons why:
 - You can lazy load your object's properties, let's say getting it from a
   server.
 
-**Bad:**
+JS 没有接口或类型，因此实现这一模式是很困难的，因为我们并没有类似 `public` 和 `private` 的关键词。
+
+然而，使用 getters 和 setters 获取对象的数据远比直接使用点操作符具有优势。为什么呢？
+
+1. 当需要对获取的对象属性执行额外操作时。
+2. 执行 `set` 时可以增加规则对要变量的合法性进行判断。
+3. 封装了内部逻辑。
+4. 在存取时可以方便的增加日志和错误处理。
+5. 继承该类时可以重载默认行为。
+6. 从服务器获取数据时可以进行懒加载。
+
+**:-1: Bad:**
 
 ```javascript
 function makeBankAccount() {
@@ -1118,7 +1210,7 @@ const account = makeBankAccount();
 account.balance = 100;
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function makeBankAccount() {
@@ -1149,11 +1241,11 @@ account.setBalance(100);
 
 **[⬆ back to top](#table-of-contents)**
 
-### Make objects have private members
+### Make objects have private members 让对象拥有私有成员
 
-This can be accomplished through closures (for ES5 and below).
+This can be accomplished through closures (for ES5 and below). 可以通过闭包完成
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 const Employee = function(name) {
@@ -1170,7 +1262,7 @@ delete employee.name;
 console.log(`Employee name: ${employee.getName()}`); // Employee name: undefined
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function makeEmployee(name) {
@@ -1189,7 +1281,7 @@ console.log(`Employee name: ${employee.getName()}`); // Employee name: John Doe
 
 **[⬆ back to top](#table-of-contents)**
 
-## **Classes**
+## **Classes 类**
 
 ### Prefer ES2015/ES6 classes over ES5 plain functions
 
