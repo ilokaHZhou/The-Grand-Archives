@@ -13,11 +13,11 @@
     - [Use default parameters instead of short circuiting or conditionals 使用默认参数，而非短路或条件判断](#use-default-parameters-instead-of-short-circuiting-or-conditionals-使用默认参数而非短路或条件判断)
   - [**Functions 函数**](#functions-函数)
     - [Function arguments (2 or fewer ideally) 参数越少越好 (理想情况不超过2个)](#function-arguments-2-or-fewer-ideally-参数越少越好-理想情况不超过2个)
-    - [Functions should do one thing](#functions-should-do-one-thing)
-    - [Function names should say what they do](#function-names-should-say-what-they-do)
-    - [Functions should only be one level of abstraction](#functions-should-only-be-one-level-of-abstraction)
-    - [Remove duplicate code](#remove-duplicate-code)
-    - [Set default objects with Object.assign](#set-default-objects-with-objectassign)
+    - [Functions should do one thing 函数只做一件事](#functions-should-do-one-thing-函数只做一件事)
+    - [Function names should say what they do 函数名应明确表明其功能](#function-names-should-say-what-they-do-函数名应明确表明其功能)
+    - [Functions should only be one level of abstraction 函数应该只做一层抽象](#functions-should-only-be-one-level-of-abstraction-函数应该只做一层抽象)
+    - [Remove duplicate code 移除重复的代码](#remove-duplicate-code-移除重复的代码)
+    - [Set default objects with Object.assign 采用默认参数精简代码](#set-default-objects-with-objectassign-采用默认参数精简代码)
     - [Don't use flags as function parameters](#dont-use-flags-as-function-parameters)
     - [Avoid Side Effects (part 1)](#avoid-side-effects-part-1)
     - [Avoid Side Effects (part 2)](#avoid-side-effects-part-2)
@@ -340,7 +340,6 @@ function createMenu(title, body, buttonText, cancellable) {
 }
 
 createMenu("Foo", "Bar", "Baz", true);
-
 ```
 
 **:+1: Good:**
@@ -360,7 +359,7 @@ createMenu({
 
 **[⬆ back to top](#table-of-contents)**
 
-### Functions should do one thing
+### Functions should do one thing 函数只做一件事
 
 This is by far the most important rule in software engineering. When functions
 do more than one thing, they are harder to compose, test, and reason about.
@@ -368,7 +367,11 @@ When you can isolate a function to just one action, it can be refactored
 easily and your code will read much cleaner. If you take nothing else away from
 this guide other than this, you'll be ahead of many developers.
 
-**Bad:**
+这是软件功能中最重要的原则之一。
+
+功能不单一的函数将导致难以重构、测试和理解。功能单一的函数易于重构，并使代码更加干净。
+
+**:-1: Bad:**
 
 ```javascript
 function emailClients(clients) {
@@ -381,7 +384,7 @@ function emailClients(clients) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function emailActiveClients(clients) {
@@ -396,9 +399,9 @@ function isActiveClient(client) {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Function names should say what they do
+### Function names should say what they do 函数名应明确表明其功能
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 function addToDate(date, month) {
@@ -411,7 +414,7 @@ const date = new Date();
 addToDate(date, 1);
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function addMonthToDate(month, date) {
@@ -424,13 +427,15 @@ addMonthToDate(1, date);
 
 **[⬆ back to top](#table-of-contents)**
 
-### Functions should only be one level of abstraction
+### Functions should only be one level of abstraction 函数应该只做一层抽象
 
 When you have more than one level of abstraction your function is usually
 doing too much. Splitting up functions leads to reusability and easier
 testing.
 
-**Bad:**
+当函数的需要的抽象多于一层时通常意味着函数功能过于复杂，需将其进行分解以提高其可重用性和可测试性。
+
+**:-1: Bad:**
 
 ```javascript
 function parseBetterJSAlternative(code) {
@@ -457,12 +462,12 @@ function parseBetterJSAlternative(code) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function parseBetterJSAlternative(code) {
   const tokens = tokenize(code);
-  const syntaxTree = parse(tokens);
+  const syntaxTree = parse(tokens); // take it out to be a seperate func
   syntaxTree.forEach(node => {
     // parse...
   });
@@ -496,7 +501,7 @@ function parse(tokens) {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Remove duplicate code
+### Remove duplicate code 移除重复的代码
 
 Do your absolute best to avoid duplicate code. Duplicate code is bad because it
 means that there's more than one place to alter something if you need to change
@@ -519,7 +524,11 @@ worse than duplicate code, so be careful! Having said this, if you can make
 a good abstraction, do it! Don't repeat yourself, otherwise you'll find yourself
 updating multiple places anytime you want to change one thing.
 
-**Bad:**
+永远、永远、永远不要在任何循环下有重复的代码。
+
+这种做法毫无意义且潜在危险极大。重复的代码意味着逻辑变化时需要对不止一处进行修改。JS 弱类型的特点使得函数拥有更强的普适性。好好利用这一优点吧。
+
+**:-1: Bad:**
 
 ```javascript
 function showDeveloperList(developers) {
@@ -537,7 +546,7 @@ function showDeveloperList(developers) {
   });
 }
 
-function showManagerList(managers) {
+function showManagerList(managers) { // pretty much the same
   managers.forEach(manager => {
     const expectedSalary = manager.calculateExpectedSalary();
     const experience = manager.getExperience();
@@ -553,7 +562,7 @@ function showManagerList(managers) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function showEmployeeList(employees) {
@@ -582,55 +591,23 @@ function showEmployeeList(employees) {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Set default objects with Object.assign
+### Set default objects with Object.assign 采用默认参数精简代码
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
-const menuConfig = {
-  title: null,
-  body: "Bar",
-  buttonText: null,
-  cancellable: true
-};
-
-function createMenu(config) {
-  config.title = config.title || "Foo";
-  config.body = config.body || "Bar";
-  config.buttonText = config.buttonText || "Baz";
-  config.cancellable =
-    config.cancellable !== undefined ? config.cancellable : true;
+function writeForumComment(subject, body) {
+  subject = subject || 'No Subject';
+  body = body || 'No text';
 }
-
-createMenu(menuConfig);
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
-const menuConfig = {
-  title: "Order",
-  // User did not include 'body' key
-  buttonText: "Send",
-  cancellable: true
-};
-
-function createMenu(config) {
-  let finalConfig = Object.assign(
-    {
-      title: "Foo",
-      body: "Bar",
-      buttonText: "Baz",
-      cancellable: true
-    },
-    config
-  );
-  return finalConfig
-  // config now equals: {title: "Order", body: "Bar", buttonText: "Send", cancellable: true}
+function writeForumComment(subject = 'No subject', body = 'No text') {
   // ...
 }
-
-createMenu(menuConfig);
 ```
 
 **[⬆ back to top](#table-of-contents)**
