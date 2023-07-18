@@ -39,18 +39,13 @@
     - [Prefer composition over inheritance 优先使用组合模式而非继承](#prefer-composition-over-inheritance-优先使用组合模式而非继承)
   - [**SOLID**](#solid)
     - [SOLID](#solid-1)
-      - [Single responsibility](#single-responsibility)
-      - [Open closed](#open-closed)
-      - [Liskov substitution](#liskov-substitution)
-      - [Interface segregation](#interface-segregation)
-      - [Dependency Inversion](#dependency-inversion)
-    - [Don't repeat yourself (DRY)](#dont-repeat-yourself-dry)
-    - [Keep it Short and Simple (KISS Principle)](#keep-it-short-and-simple-kiss-principle)
     - [Single Responsibility Principle (SRP) 单一职责原则 (SRP)](#single-responsibility-principle-srp-单一职责原则-srp)
     - [Open/Closed Principle (OCP) 开/闭原则 (OCP)](#openclosed-principle-ocp-开闭原则-ocp)
-    - [Liskov Substitution Principle (LSP)](#liskov-substitution-principle-lsp)
-    - [Interface Segregation Principle (ISP)](#interface-segregation-principle-isp)
-    - [Dependency Inversion Principle (DIP)](#dependency-inversion-principle-dip)
+    - [Liskov Substitution Principle (LSP) 利斯科夫替代原则 (LSP)](#liskov-substitution-principle-lsp-利斯科夫替代原则-lsp)
+    - [Interface Segregation Principle (ISP) 接口隔离原则 (ISP)](#interface-segregation-principle-isp-接口隔离原则-isp)
+    - [Dependency Inversion Principle (DIP) 依赖反转原则 (DIP)](#dependency-inversion-principle-dip-依赖反转原则-dip)
+    - [Don't repeat yourself (DRY)](#dont-repeat-yourself-dry)
+    - [Keep it Short and Simple (KISS Principle)](#keep-it-short-and-simple-kiss-principle)
   - [**Testing**](#testing)
     - [Single concept per test](#single-concept-per-test)
   - [**Concurrency**](#concurrency)
@@ -1560,46 +1555,6 @@ In object-oriented computer programming, `SOLID` is an acronym for five design p
 
 `D` — Dependency Inversion principle
 
-#### Single responsibility
-
-`A class should have one and only one reason to change, meaning that a class should only have one job.`
-
-Following this principle helps to produce more loosely coupled and modular systems, since many kinds of new behavior can be implemented as new classes, rather than by adding additional responsibility to existing classes. Adding new classes is always safer than changing existing classes, since no code yet depends on the new classes.
-
-When this principle is applied to application architecture and taken to its logical endpoint, you get microservices. A given microservice should have a single responsibility. If you need to extend the behavior of a system, it's usually better to do it by adding additional microservices, rather than by adding responsibility to an existing one.
-
-#### Open closed
-
-`Objects or entities should be open for extension, but closed for modification.`
-
-`Open for extension` means that we should be able to add new features or components to the application without breaking existing code.
-
-`Closed for modification` means that we should not introduce breaking changes to existing functionality, because that would force you to refactor a lot of existing code
-
-#### Liskov substitution
-
-`Let q(x) be a property provable about objects of x of type T. Then q(y) should be provable for objects y of type S where S is a subtype of T.`
-
-Subclass should override the parent class methods in a way that does not break functionality from a client’s point of view.
-
-#### Interface segregation
-
-`A client should never be forced to implement an interface that it doesn’t use or clients shouldn’t be forced to depend on methods they do not use`
-
-#### Dependency Inversion
-
-`Entities must depend on abstractions not on concretions. It states that the high level module must not depend on the low level module, but they should depend on abstractions`
-
-### Don't repeat yourself (DRY)
-
-The application should avoid specifying behavior related to a particular concept in multiple places as this practice is a frequent source of errors. At some point, a change in requirements will require changing this behavior. It's likely that at least one instance of the behavior will fail to be updated, and the system will behave inconsistently.
-
-Rather than duplicating logic, encapsulate it in a programming construct. Make this construct the single authority over this behavior, and have any other part of the application that requires this behavior use the new construct.
-
-### Keep it Short and Simple (KISS Principle)
-
-Keep it simple, stupid (KISS) is a design principle which states that designs and/or systems should be as simple as possible. Wherever possible, complexity should be avoided in a system—as simplicity guarantees the greatest levels of user acceptance and interaction.
-
 
 ### Single Responsibility Principle (SRP) 单一职责原则 (SRP)
 
@@ -1716,7 +1671,7 @@ class AjaxRequester {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Liskov Substitution Principle (LSP)
+### Liskov Substitution Principle (LSP) 利斯科夫替代原则 (LSP)
 
 This is a scary term for a very simple concept. It's formally defined as "If S
 is a subtype of T, then objects of type T may be replaced with objects of type S
@@ -1730,6 +1685,10 @@ incorrect results. This might still be confusing, so let's take a look at the
 classic Square-Rectangle example. Mathematically, a square is a rectangle, but
 if you model it using the "is-a" relationship via inheritance, you quickly
 get into trouble.
+
+“子类对象应该能够替换其超类对象被使用”。
+
+也就是说，如果有一个父类和一个子类，当采用子类替换父类时不应该产生错误的结果。
 
 **:-1: Bad:**
 
@@ -1835,7 +1794,7 @@ renderLargeShapes(shapes);
 
 **[⬆ back to top](#table-of-contents)**
 
-### Interface Segregation Principle (ISP)
+### Interface Segregation Principle (ISP) 接口隔离原则 (ISP)
 
 JavaScript doesn't have interfaces so this principle doesn't apply as strictly
 as others. However, it's important and relevant even with JavaScript's lack of
@@ -1850,6 +1809,11 @@ classes that require large settings objects. Not requiring clients to setup
 huge amounts of options is beneficial, because most of the time they won't need
 all of the settings. Making them optional helps prevent having a
 "fat interface".
+
+“客户端不应该依赖它不需要的接口；一个类对另一个类的依赖应该建立在最小的接口上。”
+
+在 JS 中，当一个类需要许多参数设置才能生成一个对象时，或许大多时候不需要设置这么多的参数。此时减少对配置参数数量的需求是有益的。
+
 
 **:-1: Bad:**
 
@@ -1913,7 +1877,7 @@ const $ = new DOMTraverser({
 
 **[⬆ back to top](#table-of-contents)**
 
-### Dependency Inversion Principle (DIP)
+### Dependency Inversion Principle (DIP) 依赖反转原则 (DIP)
 
 This principle states two essential things:
 
@@ -1935,6 +1899,10 @@ that are depended upon are implicit contracts. That is to say, the methods
 and properties that an object/class exposes to another object/class. In the
 example below, the implicit contract is that any Request module for an
 `InventoryTracker` will have a `requestItems` method.
+
+该原则有两个核心点：
+1. 高层模块不应该依赖于低层模块。他们都应该依赖于抽象接口。
+2. 抽象接口应该脱离具体实现，具体实现应该依赖于抽象接口。
 
 **:-1: Bad:**
 
@@ -2013,6 +1981,18 @@ const inventoryTracker = new InventoryTracker(
 );
 inventoryTracker.requestItems();
 ```
+
+**[⬆ back to top](#table-of-contents)**
+
+### Don't repeat yourself (DRY)
+
+The application should avoid specifying behavior related to a particular concept in multiple places as this practice is a frequent source of errors. At some point, a change in requirements will require changing this behavior. It's likely that at least one instance of the behavior will fail to be updated, and the system will behave inconsistently.
+
+Rather than duplicating logic, encapsulate it in a programming construct. Make this construct the single authority over this behavior, and have any other part of the application that requires this behavior use the new construct.
+
+### Keep it Short and Simple (KISS Principle)
+
+Keep it simple, stupid (KISS) is a design principle which states that designs and/or systems should be as simple as possible. Wherever possible, complexity should be avoided in a system—as simplicity guarantees the greatest levels of user acceptance and interaction.
 
 **[⬆ back to top](#table-of-contents)**
 
