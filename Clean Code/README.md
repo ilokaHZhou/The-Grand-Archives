@@ -34,11 +34,11 @@
     - [Use getters and setters 使用 getters 和 setters](#use-getters-and-setters-使用-getters-和-setters)
     - [Make objects have private members 让对象拥有私有成员](#make-objects-have-private-members-让对象拥有私有成员)
   - [**Classes 类**](#classes-类)
-    - [Prefer ES2015/ES6 classes over ES5 plain functions](#prefer-es2015es6-classes-over-es5-plain-functions)
-    - [Use method chaining](#use-method-chaining)
-    - [Prefer composition over inheritance](#prefer-composition-over-inheritance)
+    - [Prefer ES2015/ES6 classes over ES5 plain functions 使用 ES6 的 classes 而不是 ES5 的 Function](#prefer-es2015es6-classes-over-es5-plain-functions-使用-es6-的-classes-而不是-es5-的-function)
+    - [Use method chaining 使用方法链](#use-method-chaining-使用方法链)
+    - [Prefer composition over inheritance 优先使用组合模式而非继承](#prefer-composition-over-inheritance-优先使用组合模式而非继承)
   - [**SOLID**](#solid)
-    - [Single Responsibility Principle (SRP)](#single-responsibility-principle-srp)
+    - [Single Responsibility Principle (SRP) 单一职责原则 (SRP)](#single-responsibility-principle-srp-单一职责原则-srp)
     - [Open/Closed Principle (OCP)](#openclosed-principle-ocp)
     - [Liskov Substitution Principle (LSP)](#liskov-substitution-principle-lsp)
     - [Interface Segregation Principle (ISP)](#interface-segregation-principle-isp)
@@ -1283,14 +1283,20 @@ console.log(`Employee name: ${employee.getName()}`); // Employee name: John Doe
 
 ## **Classes 类**
 
-### Prefer ES2015/ES6 classes over ES5 plain functions
+### Prefer ES2015/ES6 classes over ES5 plain functions 使用 ES6 的 classes 而不是 ES5 的 Function
 
 It's very difficult to get readable class inheritance, construction, and method
 definitions for classical ES5 classes. If you need inheritance (and be aware
 that you might not), then prefer ES2015/ES6 classes. However, prefer small functions over
 classes until you find yourself needing larger and more complex objects.
 
-**Bad:**
+典型的 ES5 的类(function)在继承、构造和方法定义方面可读性较差。
+
+当需要继承时，优先选用 classes。
+
+但是，当在需要更大更复杂的对象时，最好优先选择更小的 function 而非 classes。
+
+**:-1: Bad:**
 
 ```javascript
 const Animal = function(age) {
@@ -1330,7 +1336,7 @@ Human.prototype.constructor = Human;
 Human.prototype.speak = function speak() {};
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 class Animal {
@@ -1368,7 +1374,7 @@ class Human extends Mammal {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Use method chaining
+### Use method chaining 使用方法链
 
 This pattern is very useful in JavaScript and you see it in many libraries such
 as jQuery and Lodash. It allows your code to be expressive, and less verbose.
@@ -1376,18 +1382,24 @@ For that reason, I say, use method chaining and take a look at how clean your co
 will be. In your class functions, simply return `this` at the end of every function,
 and you can chain further class methods onto it.
 
-**Bad:**
+这里我们的理解与《代码整洁之道》的建议有些不同。
+
+有争论说方法链不够干净且违反了[德米特法则](https://en.wikipedia.org/wiki/Law_of_Demeter)，也许这是对的，但这种方法在 JS 及许多库(如 JQuery)中显得非常实用。
+
+因此，我认为在 JS 中使用方法链是非常合适的。在 class 的函数中返回 this，能够方便的将类需要执行的多个方法链接起来。
+
+**:-1: Bad:**
 
 ```javascript
 class Car {
-  constructor(make, model, color) {
-    this.make = make;
-    this.model = model;
-    this.color = color;
+  constructor() {
+    this.make = 'Honda';
+    this.model = 'Accord';
+    this.color = 'white';
   }
 
   setMake(make) {
-    this.make = make;
+    this.name = name;
   }
 
   setModel(model) {
@@ -1403,23 +1415,25 @@ class Car {
   }
 }
 
-const car = new Car("Ford", "F-150", "red");
-car.setColor("pink");
+let car = new Car();
+car.setColor('pink');
+car.setMake('Ford');
+car.setModel('F-150')
 car.save();
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 class Car {
-  constructor(make, model, color) {
-    this.make = make;
-    this.model = model;
-    this.color = color;
+  constructor() {
+    this.make = 'Honda';
+    this.model = 'Accord';
+    this.color = 'white';
   }
 
   setMake(make) {
-    this.make = make;
+    this.name = name;
     // NOTE: Returning this for chaining
     return this;
   }
@@ -1438,17 +1452,19 @@ class Car {
 
   save() {
     console.log(this.make, this.model, this.color);
-    // NOTE: Returning this for chaining
-    return this;
   }
 }
 
-const car = new Car("Ford", "F-150", "red").setColor("pink").save();
+let car = new Car()
+  .setColor('pink')
+  .setMake('Ford')
+  .setModel('F-150')
+  .save();
 ```
 
 **[⬆ back to top](#table-of-contents)**
 
-### Prefer composition over inheritance
+### Prefer composition over inheritance 优先使用组合模式而非继承
 
 As stated famously in [_Design Patterns_](https://en.wikipedia.org/wiki/Design_Patterns) by the Gang of Four,
 you should prefer composition over inheritance where you can. There are lots of
@@ -1467,7 +1483,17 @@ makes more sense than composition:
 3. You want to make global changes to derived classes by changing a base class.
    (Change the caloric expenditure of all animals when they move).
 
-**Bad:**
+在著名的[设计模式](https://en.wikipedia.org/wiki/Design_Patterns)一书中提到，应多使用组合模式而非继承。
+
+这么做有许多优点，在想要使用继承前，多想想能否通过组合模式满足需求吧。
+
+那么，在什么时候继承具有更大的优势呢？这取决于你的具体需求，但大多情况下，可以遵守以下三点：
+
+1. 继承关系表现为"是一个"而非"有一个"(如动物->人 和 用户->用户细节)
+2. 可以复用基类的代码("Human"可以看成是"All animal"的一种)
+3. 希望当基类改变时所有派生类都受到影响(如修改"all animals"移动时的卡路里消耗量)
+
+**:-1: Bad:**
 
 ```javascript
 class Employee {
@@ -1491,7 +1517,7 @@ class EmployeeTaxData extends Employee {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 class EmployeeTaxData {
@@ -1520,7 +1546,7 @@ class Employee {
 
 ## **SOLID**
 
-### Single Responsibility Principle (SRP)
+### Single Responsibility Principle (SRP) 单一职责原则 (SRP)
 
 As stated in Clean Code, "There should never be more than one reason for a class
 to change". It's tempting to jam-pack a class with a lot of functionality, like
@@ -1531,7 +1557,13 @@ It's important because if too much functionality is in one class and you modify
 a piece of it, it can be difficult to understand how that will affect other
 dependent modules in your codebase.
 
-**Bad:**
+如《代码整洁之道》一书中所述，“修改一个类的理由不应该超过一个”。
+
+将多个功能塞进一个类的想法很诱人，但这将导致你的类无法达到概念上的内聚，并经常不得不进行修改。
+
+最小化对一个类需要修改的次数是非常有必要的。如果一个类具有太多太杂的功能，当你对其中一小部分进行修改时，将很难想象到这一修够对代码库中依赖该类的其他模块会带来什么样的影响。
+
+**:-1: Bad:**
 
 ```javascript
 class UserSettings {
@@ -1551,7 +1583,7 @@ class UserSettings {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 class UserAuth {
@@ -1587,7 +1619,7 @@ etc.) should be open for extension, but closed for modification." What does that
 mean though? This principle basically states that you should allow users to
 add new functionalities without changing existing code.
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 class AjaxAdapter extends Adapter {
@@ -1631,7 +1663,7 @@ function makeHttpCall(url) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 class AjaxAdapter extends Adapter {
@@ -1686,7 +1718,7 @@ classic Square-Rectangle example. Mathematically, a square is a rectangle, but
 if you model it using the "is-a" relationship via inheritance, you quickly
 get into trouble.
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 class Rectangle {
@@ -1741,7 +1773,7 @@ const rectangles = [new Rectangle(), new Rectangle(), new Square()];
 renderLargeRectangles(rectangles);
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 class Shape {
@@ -1806,7 +1838,7 @@ huge amounts of options is beneficial, because most of the time they won't need
 all of the settings. Making them optional helps prevent having a
 "fat interface".
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 class DOMTraverser {
@@ -1832,7 +1864,7 @@ const $ = new DOMTraverser({
 });
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 class DOMTraverser {
@@ -1891,7 +1923,7 @@ and properties that an object/class exposes to another object/class. In the
 example below, the implicit contract is that any Request module for an
 `InventoryTracker` will have a `requestItems` method.
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 class InventoryRequester {
@@ -1924,7 +1956,7 @@ const inventoryTracker = new InventoryTracker(["apples", "bananas"]);
 inventoryTracker.requestItems();
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 class InventoryTracker {
@@ -1990,7 +2022,7 @@ or refactoring an existing one.
 
 ### Single concept per test
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 import assert from "assert";
@@ -2014,7 +2046,7 @@ describe("MomentJS", () => {
 });
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 import assert from "assert";
@@ -2049,7 +2081,7 @@ describe("MomentJS", () => {
 Callbacks aren't clean, and they cause excessive amounts of nesting. With ES2015/ES6,
 Promises are a built-in global type. Use them!
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 import { get } from "request";
@@ -2073,7 +2105,7 @@ get(
 );
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 import { get } from "request-promise";
@@ -2101,7 +2133,7 @@ in an `async` keyword, and then you can write your logic imperatively without
 a `then` chain of functions. Use this if you can take advantage of ES2017/ES8 features
 today!
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 import { get } from "request-promise";
@@ -2119,7 +2151,7 @@ get("https://en.wikipedia.org/wiki/Robert_Cecil_Martin")
   });
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 import { get } from "request-promise";
@@ -2158,7 +2190,7 @@ to the console. If you wrap any bit of code in a `try/catch` it means you
 think an error may occur there and therefore you should have a plan,
 or create a code path, for when it occurs.
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 try {
@@ -2168,7 +2200,7 @@ try {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 try {
@@ -2189,7 +2221,7 @@ try {
 For the same reason you shouldn't ignore caught errors
 from `try/catch`.
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 getdata()
@@ -2201,7 +2233,7 @@ getdata()
   });
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 getdata()
@@ -2238,7 +2270,7 @@ JavaScript is untyped, so capitalization tells you a lot about your variables,
 functions, etc. These rules are subjective, so your team can choose whatever
 they want. The point is, no matter what you all choose, just be consistent.
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 const DAYS_IN_WEEK = 7;
@@ -2254,7 +2286,7 @@ class animal {}
 class Alpaca {}
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 const DAYS_IN_WEEK = 7;
@@ -2278,7 +2310,7 @@ If a function calls another, keep those functions vertically close in the source
 file. Ideally, keep the caller right above the callee. We tend to read code from
 top-to-bottom, like a newspaper. Because of this, make your code read that way.
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 class PerformanceReview {
@@ -2318,7 +2350,7 @@ const review = new PerformanceReview(employee);
 review.perfReview();
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 class PerformanceReview {
@@ -2366,7 +2398,7 @@ review.perfReview();
 
 Comments are an apology, not a requirement. Good code _mostly_ documents itself.
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 function hashIt(data) {
@@ -2388,7 +2420,7 @@ function hashIt(data) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function hashIt(data) {
@@ -2411,7 +2443,7 @@ function hashIt(data) {
 
 Version control exists for a reason. Leave old code in your history.
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 doStuff();
@@ -2420,7 +2452,7 @@ doStuff();
 // doSoMuchStuff();
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 doStuff();
@@ -2433,7 +2465,7 @@ doStuff();
 Remember, use version control! There's no need for dead code, commented code,
 and especially journal comments. Use `git log` to get history!
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 /**
@@ -2447,7 +2479,7 @@ function combine(a, b) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function combine(a, b) {
@@ -2462,7 +2494,7 @@ function combine(a, b) {
 They usually just add noise. Let the functions and variable names along with the
 proper indentation and formatting give the visual structure to your code.
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 ////////////////////////////////////////////////////////////////////////////////
@@ -2481,7 +2513,7 @@ const actions = function() {
 };
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 $scope.model = {
