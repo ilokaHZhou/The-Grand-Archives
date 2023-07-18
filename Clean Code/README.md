@@ -46,22 +46,25 @@
     - [Dependency Inversion Principle (DIP) 依赖反转原则 (DIP)](#dependency-inversion-principle-dip-依赖反转原则-dip)
     - [Don't repeat yourself (DRY)](#dont-repeat-yourself-dry)
     - [Keep it Short and Simple (KISS Principle)](#keep-it-short-and-simple-kiss-principle)
-  - [**Testing**](#testing)
-    - [Single concept per test](#single-concept-per-test)
-  - [**Concurrency**](#concurrency)
-    - [Use Promises, not callbacks](#use-promises-not-callbacks)
-    - [Async/Await are even cleaner than Promises](#asyncawait-are-even-cleaner-than-promises)
-  - [**Error Handling**](#error-handling)
-    - [Don't ignore caught errors](#dont-ignore-caught-errors)
+  - [**Testing 测试**\*](#testing-测试)
+    - [Single concept per test 单一的测试每个概念](#single-concept-per-test-单一的测试每个概念)
+  - [**Concurrency 并发**](#concurrency-并发)
+    - [Use Promises, not callbacks 用 Promises 替代回调](#use-promises-not-callbacks-用-promises-替代回调)
+    - [Async/Await are even cleaner than Promises Async/Await 是较 Promises 更好的选择](#asyncawait-are-even-cleaner-than-promises-asyncawait-是较-promises-更好的选择)
+  - [**Error Handling 错误处理**](#error-handling-错误处理)
+    - [Don't ignore caught errors 别忘了捕获错误](#dont-ignore-caught-errors-别忘了捕获错误)
     - [Don't ignore rejected promises](#dont-ignore-rejected-promises)
-  - [**Formatting**](#formatting)
-    - [Use consistent capitalization](#use-consistent-capitalization)
-    - [Function callers and callees should be close](#function-callers-and-callees-should-be-close)
-  - [**Comments**](#comments)
-    - [Only comment things that have business logic complexity.](#only-comment-things-that-have-business-logic-complexity)
-    - [Don't leave commented out code in your codebase](#dont-leave-commented-out-code-in-your-codebase)
-    - [Don't have journal comments](#dont-have-journal-comments)
-    - [Avoid positional markers](#avoid-positional-markers)
+  - [**Formatting 格式化**](#formatting-格式化)
+    - [Use consistent capitalization 大小写一致](#use-consistent-capitalization-大小写一致)
+    - [Function callers and callees should be close 调用函数的函数和被调函数应放在较近的位置](#function-callers-and-callees-should-be-close-调用函数的函数和被调函数应放在较近的位置)
+  - [**Comments 注释**](#comments-注释)
+    - [Only comment things that have business logic complexity. 只对存在一定业务逻辑复杂性的代码进行注释](#only-comment-things-that-have-business-logic-complexity-只对存在一定业务逻辑复杂性的代码进行注释)
+    - [Don't leave commented out code in your codebase 不要在代码库中遗留被注释掉的代码](#dont-leave-commented-out-code-in-your-codebase-不要在代码库中遗留被注释掉的代码)
+    - [Don't have journal comments 不需要版本更新类型注释](#dont-have-journal-comments-不需要版本更新类型注释)
+    - [Avoid positional markers 避免位置标记](#avoid-positional-markers-避免位置标记)
+  - [**Other Tools 其它工具**](#other-tools-其它工具)
+  - [**Naming Convention 命名规范**](#naming-convention-命名规范)
+  - [The Zen of Python, by Tim Peters （Python之禅）](#the-zen-of-python-by-tim-peters-python之禅)
   
 
 ## Introduction 简介
@@ -1996,7 +1999,7 @@ Keep it simple, stupid (KISS) is a design principle which states that designs an
 
 **[⬆ back to top](#table-of-contents)**
 
-## **Testing**
+## **Testing 测试***
 
 Testing is more important than shipping. If you have no tests or an
 inadequate amount, then every time you ship code you won't be sure that you
@@ -2013,7 +2016,11 @@ Test Driven Development (TDD), that is great, but the main point is to just
 make sure you are reaching your coverage goals before launching any feature,
 or refactoring an existing one.
 
-### Single concept per test
+[一些好的覆盖工具](http://gotwarlost.github.io/istanbul/)。
+
+[一些好的 JS 测试框架](http://jstherightway.org/#testing-tools)。
+
+### Single concept per test 单一的测试每个概念
 
 **:-1: Bad:**
 
@@ -2067,12 +2074,14 @@ describe("MomentJS", () => {
 
 **[⬆ back to top](#table-of-contents)**
 
-## **Concurrency**
+## **Concurrency 并发**
 
-### Use Promises, not callbacks
+### Use Promises, not callbacks 用 Promises 替代回调
 
 Callbacks aren't clean, and they cause excessive amounts of nesting. With ES2015/ES6,
 Promises are a built-in global type. Use them!
+
+回调不够整洁并会造成大量的嵌套。ES6 内嵌了 Promises，使用它吧。
 
 **:-1: Bad:**
 
@@ -2118,13 +2127,17 @@ get("https://en.wikipedia.org/wiki/Robert_Cecil_Martin")
 
 **[⬆ back to top](#table-of-contents)**
 
-### Async/Await are even cleaner than Promises
+### Async/Await are even cleaner than Promises Async/Await 是较 Promises 更好的选择
 
 Promises are a very clean alternative to callbacks, but ES2017/ES8 brings async and await
 which offer an even cleaner solution. All you need is a function that is prefixed
 in an `async` keyword, and then you can write your logic imperatively without
 a `then` chain of functions. Use this if you can take advantage of ES2017/ES8 features
 today!
+
+Promises 是较回调而言更好的一种选择，但 ES7 中的 async 和 await 更胜过 Promises。
+
+在能使用 ES7 特性的情况下可以尽量使用他们替代 Promises。
 
 **:-1: Bad:**
 
@@ -2167,14 +2180,16 @@ getCleanCodeArticle()
 
 **[⬆ back to top](#table-of-contents)**
 
-## **Error Handling**
+## **Error Handling 错误处理**
 
 Thrown errors are a good thing! They mean the runtime has successfully
 identified when something in your program has gone wrong and it's letting
 you know by stopping function execution on the current stack, killing the
 process (in Node), and notifying you in the console with a stack trace.
 
-### Don't ignore caught errors
+错误抛出是个好东西！这使得你能够成功定位运行状态中的程序产生错误的位置。
+
+### Don't ignore caught errors 别忘了捕获错误
 
 Doing nothing with a caught error doesn't give you the ability to ever fix
 or react to said error. Logging the error to the console (`console.log`)
@@ -2182,6 +2197,10 @@ isn't much better as often times it can get lost in a sea of things printed
 to the console. If you wrap any bit of code in a `try/catch` it means you
 think an error may occur there and therefore you should have a plan,
 or create a code path, for when it occurs.
+
+对捕获的错误不做任何处理是没有意义的。
+
+代码中 `try/catch` 的意味着你认为这里可能出现一些错误，你应该对这些可能的错误存在相应的处理方案。
 
 **:-1: Bad:**
 
@@ -2246,7 +2265,7 @@ getdata()
 
 **[⬆ back to top](#table-of-contents)**
 
-## **Formatting**
+## **Formatting 格式化**
 
 Formatting is subjective. Like many rules herein, there is no hard and fast
 rule that you must follow. The main point is DO NOT ARGUE over formatting.
@@ -2257,11 +2276,18 @@ For things that don't fall under the purview of automatic formatting
 (indentation, tabs vs. spaces, double vs. single quotes, etc.) look here
 for some guidance.
 
-### Use consistent capitalization
+格式化是一件主观的事。如同这里的许多规则一样，这里并没有一定/立刻需要遵守的规则。可以在[这里](http://standardjs.com/rules.html)完成格式的自动化。
+
+
+### Use consistent capitalization 大小写一致
 
 JavaScript is untyped, so capitalization tells you a lot about your variables,
 functions, etc. These rules are subjective, so your team can choose whatever
 they want. The point is, no matter what you all choose, just be consistent.
+
+JS 是弱类型语言，合理的采用大小写可以告诉你关于变量/函数等的许多消息。
+
+这些规则是主观定义的，团队可以根据喜欢进行选择。重点在于无论选择何种风格，都需要注意保持一致性。
 
 **:-1: Bad:**
 
@@ -2297,11 +2323,15 @@ class Alpaca {}
 
 **[⬆ back to top](#table-of-contents)**
 
-### Function callers and callees should be close
+### Function callers and callees should be close 调用函数的函数和被调函数应放在较近的位置
 
 If a function calls another, keep those functions vertically close in the source
 file. Ideally, keep the caller right above the callee. We tend to read code from
 top-to-bottom, like a newspaper. Because of this, make your code read that way.
+
+当函数间存在相互调用的情况时，应将两者置于较近的位置。
+
+理想情况下，应将调用其他函数的函数写在被调用函数的上方。
 
 **:-1: Bad:**
 
@@ -2385,11 +2415,13 @@ review.perfReview();
 
 **[⬆ back to top](#table-of-contents)**
 
-## **Comments**
+## **Comments 注释**
 
-### Only comment things that have business logic complexity.
+### Only comment things that have business logic complexity. 只对存在一定业务逻辑复杂性的代码进行注释
 
 Comments are an apology, not a requirement. Good code _mostly_ documents itself.
+
+注释并不是必须的，好的代码是能够让人一目了然，不用过多无谓的注释。
 
 **:-1: Bad:**
 
@@ -2432,9 +2464,11 @@ function hashIt(data) {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Don't leave commented out code in your codebase
+### Don't leave commented out code in your codebase 不要在代码库中遗留被注释掉的代码
 
 Version control exists for a reason. Leave old code in your history.
+
+版本控制的存在是有原因的。让旧代码存在于你的 history 里吧。
 
 **:-1: Bad:**
 
@@ -2453,10 +2487,14 @@ doStuff();
 
 **[⬆ back to top](#table-of-contents)**
 
-### Don't have journal comments
+### Don't have journal comments 不需要版本更新类型注释
 
 Remember, use version control! There's no need for dead code, commented code,
 and especially journal comments. Use `git log` to get history!
+
+记住，我们可以使用版本控制。废代码、被注释的代码及用注释记录代码中的版本更新说明都是没有必要的。
+
+需要时可以使用 `git log` 获取历史版本。
 
 **:-1: Bad:**
 
@@ -2482,10 +2520,12 @@ function combine(a, b) {
 
 **[⬆ back to top](#table-of-contents)**
 
-### Avoid positional markers
+### Avoid positional markers 避免位置标记
 
 They usually just add noise. Let the functions and variable names along with the
 proper indentation and formatting give the visual structure to your code.
+
+这些东西通常只能代码麻烦，采用适当的缩进就可以了。
 
 **:-1: Bad:**
 
@@ -2520,3 +2560,67 @@ const actions = function() {
 ```
 
 **[⬆ back to top](#table-of-contents)**
+
+
+## **Other Tools 其它工具**
+
+**[⬆ back to top](#table-of-contents)**
+
+[PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/)
+
+## **Naming Convention 命名规范**
+
+命名规范在编写代码起到了非常重要的作用。
+
+毕竟是规范，不用也可以，但是对于代码的理解或许会很难。代码大多数时候不是给你自己看的。所以改有的还得有。
+
+1.模块名尽量短小，并且全部小写字母，可以使用下划线连接多个单词。例如：value、game_value等。(value是我经常用的一个单词)
+
+2.包名尽量短小，并且全部使用小写字母，不推荐使用下划线。例如：box.top、game、fun等。
+
+3.类名采用首字母大写形式（Pascal风格）。例如一个战斗机类—FighterPlane。
+
+4.模块内部的类采用下划线“_”+Pascal 风格 的类名组成。例如，在战斗机类—FighterPlane 中新建一个内部类，制空战斗机—AirSuperiorityFighter
+
+5.函数、类的属性和方法的命名规范和模块相似，也是全部采用小写字母，单词间采用下划线“_”分隔。（Typescript使用camal case）
+
+6.使用双下划线“__”开头的实例变量或方法是私有的。
+
+## The Zen of Python, by Tim Peters （Python之禅）
+
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one-- and preferably only one --obvious way to do it.
+Although that way may not be obvious at first unless you're Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!
+
+优美胜于丑陋（Python 以编写优美的代码为目标）
+明了胜于晦涩（优美的代码应当是明了的，命名规范，风格相似）
+简洁胜于复杂（优美的代码应当是简洁的，不要有复杂的内部实现）
+复杂胜于凌乱（如果复杂不可避免，那代码间也不能有难懂的关系，要保持接口简洁）
+扁平胜于嵌套（优美的代码应当是扁平的，不能有太多的嵌套）
+间隔胜于紧凑（优美的代码有适当的间隔，不要奢望一行代码解决问题）
+可读性很重要（优美的代码是可读的）
+即便假借特例的实用性之名，也不可违背这些规则（这些规则至高无上）
+ 
+不要包容所有错误，除非你确定需要这样做（精准地捕获异常，不写 except:pass 风格的代码）
+当存在多种可能，不要尝试去猜测
+而是尽量找一种，最好是唯一一种明显的解决方案（如果不确定，就用穷举法）
+虽然这并不容易，因为你不是 Python 之父（这里的 Dutch 是指 Guido ）
+做也许好过不做，但不假思索就动手还不如不做（动手之前要细思量）
+如果你无法向人描述你的方案，那肯定不是一个好方案；反之亦然（方案测评标准）
+命名空间是一种绝妙的理念，我们应当多加利用（倡导与号召）
