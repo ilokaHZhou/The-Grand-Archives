@@ -1,7 +1,9 @@
 # Clean Code
 
+## Table of Contents
 
 - [Clean Code](#clean-code)
+  - [Table of Contents](#table-of-contents)
   - [Introduction 简介](#introduction-简介)
   - [**Variables 变量**](#variables-变量)
     - [Use meaningful and pronounceable variable names 使用有意义的变量名](#use-meaningful-and-pronounceable-variable-names-使用有意义的变量名)
@@ -2564,8 +2566,6 @@ const actions = function() {
 
 ## **Other Tools 其它工具**
 
-**[⬆ back to top](#table-of-contents)**
-
 [PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/)
 
 ## **Naming Convention 命名规范**
@@ -2624,3 +2624,5 @@ Namespaces are one honking great idea -- let's do more of those!
 做也许好过不做，但不假思索就动手还不如不做（动手之前要细思量）
 如果你无法向人描述你的方案，那肯定不是一个好方案；反之亦然（方案测评标准）
 命名空间是一种绝妙的理念，我们应当多加利用（倡导与号召）
+
+**[⬆ back to top](#table-of-contents)**
