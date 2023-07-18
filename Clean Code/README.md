@@ -3,7 +3,7 @@
 
 - [Clean Code](#clean-code)
   - [Introduction 简介](#introduction-简介)
-  - [Variables 变量](#variables-变量)
+  - [**Variables 变量**](#variables-变量)
     - [Use meaningful and pronounceable variable names 使用有意义的变量名](#use-meaningful-and-pronounceable-variable-names-使用有意义的变量名)
     - [Use the same vocabulary for the same type of variable 合并功能一致的变量](#use-the-same-vocabulary-for-the-same-type-of-variable-合并功能一致的变量)
     - [Use searchable names 便于搜索的名字](#use-searchable-names-便于搜索的名字)
@@ -11,8 +11,8 @@
     - [Avoid Mental Mapping 避免思维映射](#avoid-mental-mapping-避免思维映射)
     - [Don't add unneeded context 不添加无用的上下文](#dont-add-unneeded-context-不添加无用的上下文)
     - [Use default parameters instead of short circuiting or conditionals 使用默认参数，而非短路或条件判断](#use-default-parameters-instead-of-short-circuiting-or-conditionals-使用默认参数而非短路或条件判断)
-  - [**Functions**](#functions)
-    - [Function arguments (2 or fewer ideally)](#function-arguments-2-or-fewer-ideally)
+  - [**Functions 函数**](#functions-函数)
+    - [Function arguments (2 or fewer ideally) 参数越少越好 (理想情况不超过2个)](#function-arguments-2-or-fewer-ideally-参数越少越好-理想情况不超过2个)
     - [Functions should do one thing](#functions-should-do-one-thing)
     - [Function names should say what they do](#function-names-should-say-what-they-do)
     - [Functions should only be one level of abstraction](#functions-should-only-be-one-level-of-abstraction)
@@ -103,9 +103,9 @@ improvement. Beat up the code instead!
 
 软件工程技术已有50多年的历史了，我们仍然要学习很多的东西。当软件架构和架构本身一样古老的时候，也许我们需要遵守更严格的规则。但是现在，让这些指导原则作为评估您和您的团队代码质量的试金石。
 
-另外，理解这些原则不会立即让您变的优秀，也不意味着不会犯错。每一段代码都是从不完美开始的，通过反复走查不断趋于完美，就像黏土制作成陶艺一样，享受这个过程吧!
+最后你需要知道的是，这些东西不会让你立刻变成一个优秀的工程师，长期奉行他们也并不意味着你能够高枕无忧不再犯错。千里之行，始于足下。我们需要时常和同行们进行代码评审，不断优化自己的代码。不要惧怕改善代码质量所需付出的努力，加油。
 
-## Variables 变量
+## **Variables 变量**
 
 >计算机科学只存在两个难题：缓存失效和命名。—— Phil KarIton
 
@@ -234,7 +234,7 @@ locations.forEach(location => {
 If your class/object name tells you something, don't repeat that in your
 variable name. 如果类名或对象名已经表达了某些信息，在内部变量名中不要再重复表达。
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 const Car = {
@@ -248,7 +248,7 @@ function paintCar(car, color) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 const Car = {
@@ -271,7 +271,7 @@ use them, your function will only provide default values for `undefined`
 arguments. Other "falsy" values such as `''`, `""`, `false`, `null`, `0`, and
 `NaN`, will not be replaced by a default value.
 
-**Bad:**
+**:-1: Bad:**
 
 ```javascript
 function createMicrobrewery(name) {
@@ -280,7 +280,7 @@ function createMicrobrewery(name) {
 }
 ```
 
-**Good:**
+**:+1: Good:**
 
 ```javascript
 function createMicrobrewery(name = "Hipster Brew Co.") {
@@ -290,9 +290,9 @@ function createMicrobrewery(name = "Hipster Brew Co.") {
 
 **[⬆ back to top](#table-of-contents)**
 
-## **Functions**
+## **Functions 函数**
 
-### Function arguments (2 or fewer ideally)
+### Function arguments (2 or fewer ideally) 参数越少越好 (理想情况不超过2个)
 
 Limiting the amount of function parameters is incredibly important because it
 makes testing your function easier. Having more than three leads to a
@@ -321,6 +321,16 @@ destructuring syntax. This has a few advantages:
    cloned.
 4. Linters can warn you about unused properties, which would be impossible
    without destructuring.
+
+限制参数个数，这样函数测试会更容易。超过三个参数会导致测试复杂度激增，需要测试众多不同参数的组合场景。
+理想情况，只有一两个参数。如果有两个以上的参数，那么您的函数可能就太过复杂了。
+
+如果需要很多参数，请您考虑使用对象。为了使函数的属性更清晰，可以使用[解构](https://basarat.gitbooks.io/typescript/docs/destructuring.html)，它有以下优点：
+
+1. 当有人查看函数签名时，会立即清楚使用了哪些属性。
+2. 可以用来
+3. 解构对传递给函数的参数对象做深拷贝，这可预防副作用。(注意：**不会克隆**从参数对象中解构的对象和数组)
+4. linters会对未使用的属性显示警告。
 
 **Bad:**
 
